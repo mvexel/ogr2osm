@@ -472,22 +472,8 @@ def parsePolygon(ogrgeometry):
     # should not) change behavior when simplify relations is turned on.
     if ogrgeometry.GetGeometryCount() == 0:
         l.warning("Polygon with no rings?")
-    elif ogrgeometry.GetGeometryCount() == 1:
-        return parseLineString(ogrgeometry.GetGeometryRef(0))
     else:
-        geometry = Relation()
-        try:
-            exterior = parseLineString(ogrgeometry.GetGeometryRef(0))
-            exterior.addparent(geometry)
-        except:
-            l.warning("Polygon with no exterior ring?")
-            return None
-        geometry.members.append((exterior, "outer"))
-        for i in range(1, ogrgeometry.GetGeometryCount()):
-            interior = parseLineString(ogrgeometry.GetGeometryRef(i))
-            interior.addparent(geometry)
-            geometry.members.append((interior, "inner"))
-        return geometry
+        return parseLineString(ogrgeometry.GetGeometryRef(0))
 
 def parseCollection(ogrgeometry):
     # OGR MultiPolygon maps easily to osm multipolygon, so special case it
